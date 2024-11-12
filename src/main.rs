@@ -65,6 +65,17 @@ impl Card {
     }
 }
 
+struct Deck {
+    cards: [u8; 52], // index of each card
+}
+
+impl Deck {
+    fn new() -> Self {
+        Self { 
+            cards: [0..52],
+    }
+}
+
 fn main() {
     let c = Card::new(Suit::Spades, 7);
     let b = Card::new(Suit::Hearts, 7);
