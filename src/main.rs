@@ -9,11 +9,11 @@ enum Suit {
 
 struct Card {
     suit: Suit,
-    value: u8,
+    value: usize,
 }
 
 impl Card {
-    fn new(suit: Suit, value: u8) -> Self {
+    fn new(suit: Suit, value: usize) -> Self {
         Self {
             suit,
             value,
@@ -40,7 +40,7 @@ impl Card {
         format!("{0}{1}", self.value_to_string(), self.suit_to_string())
     }
 
-    fn suit_to_int(&self) -> u8 {
+    fn suit_to_int(&self) -> usize {
         match self.suit {
             Suit::Clubs => 0,
             Suit::Diamonds => 1,
@@ -66,24 +66,62 @@ impl Card {
 }
 
 struct Deck {
-    cards: [u8; 52], // index of each card
+    cards: [usize; 52], // index of each card
+    index: usize,
 }
 
 impl Deck {
     fn new() -> Self {
+        let mut a :[usize; 52] = [0; 52];
+        for i in 0..52 {
+            a[i] = i;
+        }
+
         Self { 
-            cards: [0..52],
+            cards: a,
+            index: 0,
+        }
+    }
+
+    // returns a created Card struct based on usize int drawn from the deck
+    fn convert_int_to_card(&self, mut card: usize) -> Card {
+        // convert into suit (int) and card (int)
+        let mut suit: usize = 0;
+        while card > 12 {
+            suit += 1;
+            card -= 12;
+        }
+        // increase card by one because we're 0 indexing
+        card += 1;
+        let suit: Suit = self.int_to_suit(suit);
+        return Card::new(suit, card);
+    }
+
+    fn int_to_suit(&self, suit: usize) -> Suit {
+        match suit {
+            0 => Suit::Clubs,
+            1 => Suit::Diamonds,
+            2 => Suit::Hearts,
+            3 => Suit::Spades,
+            _ => Suit::Clubs,
+        }
+    }
+
+    fn draw_int_card(&mut self) -> usize {
+        let ret = self.cards[self.index];
+        self.index += 1;
+        return ret;
+    }
+
+    fn draw_card(&mut self) -> Card {
+        let int_card: usize = self.draw_int_card();
+        self.convert_int_to_card(int_card)
     }
 }
 
 fn main() {
-    let c = Card::new(Suit::Spades, 7);
-    let b = Card::new(Suit::Hearts, 7);
-    println!("{}", c.to_string());
-    if c.is_greater(&b) {
-        println!("{0} is greater than {1}", c.to_string(), b.to_string());
-    }
-    else if b.is_greater(&c) {
-        println!("{0} is greater than {1}", b.to_string(), c.to_string());
-    }
+    let mut deck: Deck = Deck::new();
+
+    let card: Card = deck.draw_card();
+    println!("Draw card: {}", card.to_string());
 }
