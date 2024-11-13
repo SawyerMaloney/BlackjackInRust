@@ -48,7 +48,7 @@ impl Card {
     }
 
     // returns true if greater, false if not
-    fn is_greater(&self, card: &Card) -> bool {
+    pub fn is_greater(&self, card: &Card) -> bool {
         if self.value > card.value {
             return true;
         }
