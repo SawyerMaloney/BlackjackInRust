@@ -29,12 +29,15 @@ impl Card {
         }
     }
 
-    // TODO
     fn value_to_string(&self) -> String {
         if self.value < 11 {
             return String::from(self.value.to_string());
+        } else if self.value == 11 {
+            return String::from("Jack");
+        } else if self.value == 12 {
+            return String::from("Queen");
         }
-        self.value.to_string()
+        return String::from("King");
     }
 
     pub fn to_string(&self) -> String {
@@ -48,6 +51,10 @@ impl Card {
             Suit::Hearts => 2,
             Suit::Spades => 3,
         }
+    }
+
+    pub fn value(&self) -> usize {
+        self.value
     }
 
     // returns true if greater, false if not

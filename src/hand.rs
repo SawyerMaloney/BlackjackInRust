@@ -8,18 +8,6 @@ use crate::card::Suit;
  *  comparisons between them
  * */
 
-pub enum HandRanks {
-    RoyalFlush,
-    StraightFlush,
-    FourOfAKind,
-    FullHouse,
-    Flush,
-    Straight,
-    ThreeOfAKind,
-    TwoPair,
-    Pair,
-    HighCard,
-}
 
 pub struct Hand {
     cards: [Card; 52],
@@ -49,7 +37,18 @@ impl Hand {
     }
 
     pub fn compare_hand(&self, hand: &Hand) -> bool {
-        // assuming for now that it only has one card
-        return self.cards[0].is_greater(&hand.cards[0]);
+        self.valid() & (self.value() > hand.value())
+    }
+
+    pub fn value(&self) -> usize {
+        let mut sum = 0;
+        for card in 0..self.num_of_cards {
+            sum += self.cards[card].value(); 
+        }
+        sum
+    }
+
+    pub fn valid(&self) -> bool {
+        (self.value() < 22) & (self.num_of_cards != 0)
     }
 }

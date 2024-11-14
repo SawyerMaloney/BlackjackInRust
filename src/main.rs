@@ -7,7 +7,6 @@ mod deck;
 use deck::Deck;
 
 mod hand;
-use hand::HandRanks;
 use hand::Hand;
 
 
@@ -47,7 +46,7 @@ fn play_the_game() -> io::Result<()>{
             Err(_) => 0,
         };
 
-        if int_input <= balance {
+        if (int_input <= balance) & (input.trim() != "q") {
             println!("Your hand: {0}. Their hand: {1}", your_hand.to_string(), foe_hand.to_string());
             if your_hand.compare_hand(&foe_hand) {
                 println!("You won: {}", input.trim());
@@ -56,7 +55,7 @@ fn play_the_game() -> io::Result<()>{
                 println!("You lost: {}", input.trim());
                 balance -= int_input;
             }
-        } else {
+        } else if input.trim() != "q" {
             println!("That bet is too big!");
         }
     }
