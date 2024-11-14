@@ -52,4 +52,8 @@ impl Hand {
     pub fn valid(&self) -> bool {
         (self.value() < 22) & (self.num_of_cards != 0)
     }
+
+    pub fn show_dealer_hand(&self) -> String {
+        return self.cards[0].to_string();
+    }
 }

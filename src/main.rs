@@ -38,7 +38,7 @@ fn play_blackjack() -> io::Result<()>{
         let mut your_hand = setup_hand(&mut deck);
         let mut foe_hand = setup_hand(&mut deck);
 
-        print!("Your hand: {0}. Current balance: {1}. How much would you like to bet? (num or q to quit): ", your_hand.to_string(), balance);
+        print!("Your hand: {0}. Dealer showing: {1} Current balance: {2}. How much would you like to bet? (num or q to quit): ", your_hand.to_string(), foe_hand.show_dealer_hand(), balance);
         io::stdout().flush()?;
         io::stdin().read_line(&mut input)?;
         let int_input: u32 = match input.trim().parse::<u32>() {
