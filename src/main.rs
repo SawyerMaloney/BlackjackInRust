@@ -18,7 +18,7 @@ fn main() -> io::Result<()> {
 
     if input.trim() == "y" {
         println!("Playing the game!");
-        play_the_game()?;
+        play_blackjack()?;
     } else {
         println!("Not playing the game");
     }
@@ -26,7 +26,7 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-fn play_the_game() -> io::Result<()>{
+fn play_blackjack() -> io::Result<()>{
     let mut deck = Deck::new();
     let mut balance: u32 = 100;
     let mut input = String::new();
@@ -34,11 +34,11 @@ fn play_the_game() -> io::Result<()>{
     while input.trim() != "q" {
         input = String::new();
         deck.shuffle();
-        let mut your_hand = Hand::new();
-        your_hand.add_card(deck.draw_card());
+
+        let mut your_hand = setup_hand(&mut deck);
+        let mut foe_hand = setup_hand(&mut deck);
+
         print!("Your hand: {0}. Current balance: {1}. How much would you like to bet? (num or q to quit): ", your_hand.to_string(), balance);
-        let mut foe_hand = Hand::new();
-        foe_hand.add_card(deck.draw_card());
         io::stdout().flush()?;
         io::stdin().read_line(&mut input)?;
         let int_input: u32 = match input.trim().parse::<u32>() {
@@ -61,4 +61,11 @@ fn play_the_game() -> io::Result<()>{
     }
 
     Ok(())
+}
+
+fn setup_hand(deck: &mut Deck) -> Hand {
+    let mut hand = Hand::new();
+    hand.add_card(deck.draw_card());
+    hand.add_card(deck.draw_card());
+    return hand;
 }

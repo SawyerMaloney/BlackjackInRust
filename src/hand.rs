@@ -6,6 +6,7 @@ use crate::card::Suit;
  *  Implementation of a hand. Idea: program draws cards from the deck and adds them to one of two
  *  hands. The hands will do the calculation of the type of hand it is and allow for easy
  *  comparisons between them
+ *
  * */
 
 

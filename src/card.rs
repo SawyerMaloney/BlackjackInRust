@@ -54,7 +54,10 @@ impl Card {
     }
 
     pub fn value(&self) -> usize {
-        self.value
+        if self.value < 11 {
+            return self.value;
+        }
+        10
     }
 
     // returns true if greater, false if not
