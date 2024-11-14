@@ -35,8 +35,8 @@ fn play_blackjack() -> io::Result<()>{
         input = String::new();
         deck.shuffle();
 
-        let mut your_hand = setup_hand(&mut deck);
-        let foe_hand = setup_hand(&mut deck);
+        let mut your_hand = setup_hand(&mut deck, false);
+        let foe_hand = setup_hand(&mut deck, true);
 
         print!("Your balance: {}. How much would you like to bet (num or q to quit): ", balance); 
         io::stdout().flush()?;
@@ -48,12 +48,20 @@ fn play_blackjack() -> io::Result<()>{
 
         if (int_input <= balance) & (input.trim() != "q") {
             let mut hit = String::new();
+            let mut first_hand = true;
             while hit.trim() != "n" {
-                print!("Your hand: {0}. Dealer showing: {1}. Do you want to hit (y/n): ", your_hand.to_string(), foe_hand.show_dealer_hand());
+                if first_hand {
+                    print_hand(&your_hand, &foe_hand);
+                    first_hand = false;
+                } else {
+                    print!("\x1b[4F");
+                    print_hand(&your_hand, &foe_hand);
+                }
+                print!("Do you want to hit (y/n): ");
                 io::stdout().flush()?;
                 io::stdin().read_line(&mut hit)?;
                 hit = hit;
-                if hit.trim() != "n" {
+                if hit.trim() == "y" {
                     your_hand.add_card(deck.draw_card());
                     hit = String::new();
                 }
@@ -78,9 +86,26 @@ fn play_blackjack() -> io::Result<()>{
     Ok(())
 }
 
-fn setup_hand(deck: &mut Deck) -> Hand {
+fn print_hand(your_hand: &Hand, dealer_hand: &Hand) {
+    // print out the hand in format
+    println!("-------------------------------------------");
+    println!("Your hand | {} | Dealer showing | {} |", your_hand.to_string(), dealer_hand.show_dealer_hand());
+    println!("-------------------------------------------");
+}
+
+fn clear_screen() {
+    print!("{}[2J", 27 as char);
+}
+
+fn setup_hand(deck: &mut Deck, is_foe: bool) -> Hand {
     let mut hand = Hand::new();
-    hand.add_card(deck.draw_card());
-    hand.add_card(deck.draw_card());
+    if !is_foe {
+        hand.add_card(deck.draw_card());
+        hand.add_card(deck.draw_card());
+    } else {
+        while hand.value() < 17 {
+            hand.add_card(deck.draw_card());
+        }
+    }
     return hand;
 }

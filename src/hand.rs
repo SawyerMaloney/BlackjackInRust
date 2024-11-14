@@ -37,7 +37,7 @@ impl Hand {
     }
 
     pub fn compare_hand(&self, hand: &Hand) -> bool {
-        self.valid() & (self.value() > hand.value())
+        self.valid() & ((self.value() > hand.value()) | !hand.valid())
     }
 
     pub fn value(&self) -> usize {
