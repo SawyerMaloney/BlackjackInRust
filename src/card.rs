@@ -1,3 +1,4 @@
+#[derive(Copy, Clone)]
 pub enum Suit {
     Clubs,
     Diamonds,
@@ -5,6 +6,7 @@ pub enum Suit {
     Spades,
 }
 
+#[derive(Copy, Clone)]
 pub struct Card {
     suit: Suit,
     value: usize,
@@ -27,6 +29,7 @@ impl Card {
         }
     }
 
+    // TODO
     fn value_to_string(&self) -> String {
         if self.value < 11 {
             return String::from(self.value.to_string());

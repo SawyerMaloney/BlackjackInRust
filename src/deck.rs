@@ -52,8 +52,13 @@ impl Deck {
     }
 
     pub fn draw_card(&mut self) -> Card {
-        let int_card: usize = self.draw_int_card();
-        self.convert_int_to_card(int_card)
+        if self.index < 52 {
+            let int_card: usize = self.draw_int_card();
+            return self.convert_int_to_card(int_card);
+        }
+        // if we try to draw on an empty deck, for now we reshuffle and deak
+        self.shuffle();
+        return self.draw_card();
     }
 
     pub fn shuffle(&mut self) {
@@ -64,6 +69,7 @@ impl Deck {
             shuffle_index += 1;
         }
         self.cards = shuffled;
+        self.index = 0;
     }
 
     fn shuffle_next_card(&self, shuffled: &[usize; 52], shuffle_index: usize) -> usize {
