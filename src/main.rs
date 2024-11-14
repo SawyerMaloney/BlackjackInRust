@@ -36,9 +36,9 @@ fn play_blackjack() -> io::Result<()>{
         deck.shuffle();
 
         let mut your_hand = setup_hand(&mut deck);
-        let mut foe_hand = setup_hand(&mut deck);
+        let foe_hand = setup_hand(&mut deck);
 
-        print!("Your hand: {0}. Dealer showing: {1} Current balance: {2}. How much would you like to bet? (num or q to quit): ", your_hand.to_string(), foe_hand.show_dealer_hand(), balance);
+        print!("Your balance: {}. How much would you like to bet (num or q to quit): ", balance); 
         io::stdout().flush()?;
         io::stdin().read_line(&mut input)?;
         let int_input: u32 = match input.trim().parse::<u32>() {
@@ -47,7 +47,22 @@ fn play_blackjack() -> io::Result<()>{
         };
 
         if (int_input <= balance) & (input.trim() != "q") {
-            println!("Your hand: {0}. Their hand: {1}", your_hand.to_string(), foe_hand.to_string());
+            let mut hit = String::new();
+            while hit.trim() != "n" {
+                print!("Your hand: {0}. Dealer showing: {1}. Do you want to hit (y/n): ", your_hand.to_string(), foe_hand.show_dealer_hand());
+                io::stdout().flush()?;
+                io::stdin().read_line(&mut hit)?;
+                hit = hit;
+                if hit.trim() != "n" {
+                    your_hand.add_card(deck.draw_card());
+                    hit = String::new();
+                }
+                if !your_hand.valid() {
+                    println!("Bust!");
+                    hit = String::from("n");
+                }
+            }
+            println!("Your hand: {0}. Dealer hand: {1}", your_hand.to_string(), foe_hand.to_string());
             if your_hand.compare_hand(&foe_hand) {
                 println!("You won: {}", input.trim());
                 balance += int_input;
